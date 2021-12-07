@@ -10,7 +10,7 @@ type TypeProps = {
 export const Container = styled.View<TypeProps>`
   width: ${RFValue(286)}px;
   padding: 19px 23px;
-  padding-bottom: ${RFValue(42)}px;
+  padding-bottom: ${RFValue(30)}px;
   margin-right: 16px;
 
   background: ${({ theme, type }) =>
@@ -54,7 +54,7 @@ export const Icon = styled(Feather)<TypeProps>`
 export const Footer = styled.View``;
 
 export const Amount = styled.Text<TypeProps>`
-  margin-top: 38px;
+  margin-top: ${RFValue(16)}px;
   color: ${({ theme, type }) =>
     type === "total" ? theme.colors.shape : theme.colors.textDark};
 
