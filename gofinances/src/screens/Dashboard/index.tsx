@@ -102,10 +102,12 @@ export const Dashboard = () => {
 
       <Transactions>
         <Title>Listagem</Title>
-        <TransactionsList
+        <TransactionsList<React.ElementType>
           data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <TransactionCard data={item} />}
+          keyExtractor={(item: DataListProps) => item.id}
+          renderItem={({ item }: { item: DataListProps }) => (
+            <TransactionCard data={item} />
+          )}
         />
       </Transactions>
     </Container>
