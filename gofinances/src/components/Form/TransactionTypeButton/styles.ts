@@ -3,6 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { TransactionTypeButtonType } from ".";
 import theme from "../../../global/styles/theme";
+import { TouchableOpacity } from "react-native";
 
 type IconProps = {
   type: TransactionTypeButtonType;
@@ -33,7 +34,7 @@ const setActiveButtonStyles = (
   }
 };
 
-export const Container = styled.TouchableOpacity<ContainerProps>`
+export const Container = styled(TouchableOpacity)<ContainerProps>`
   width: 48%;
   padding: 16px 24px;
 
