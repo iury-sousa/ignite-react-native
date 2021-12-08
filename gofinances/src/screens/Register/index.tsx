@@ -103,7 +103,7 @@ export const Register = () => {
               placeholder="Preço"
               name="amount"
               control={control}
-              keyboardType="number"
+              keyboardType="numeric"
               error={errors.amount?.message}
             />
 
