@@ -21,7 +21,7 @@ export const TransactionTypeButton = ({
   ...rest
 }: Props) => {
   return (
-    <Container isActive={isActive} type={type} activeOpacity={0.8} {...rest}>
+    <Container isActive={isActive} type={type} {...rest}>
       <Icon name={icons[type]} type={type} />
       <Title>{title}</Title>
     </Container>
