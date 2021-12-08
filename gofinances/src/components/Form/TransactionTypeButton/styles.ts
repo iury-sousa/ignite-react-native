@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { TransactionTypeButtonType } from ".";
 import theme from "../../../global/styles/theme";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { RectButton, RectButtonProps } from "react-native-gesture-handler";
 
 type IconProps = {
   type: TransactionTypeButtonType;
@@ -23,27 +23,28 @@ const setActiveButtonStyles = (
       case "up":
         return css`
           background-color: ${theme.colors.successLight};
-          border-width: 0;
+          border-color: ${theme.colors.successLight};
         `;
       case "down":
         return css`
           background-color: ${theme.colors.attentionLight};
-          border-width: 0;
+          border-color: ${theme.colors.attentionLight};
         `;
     }
   }
 };
 
-export const Container = styled(TouchableOpacity).attrs({
-  activeOpacity: 0.8,
-} as TouchableOpacityProps)<ContainerProps>`
+export const Container = styled.View<ContainerProps>`
   width: 48%;
-  padding: 16px 24px;
 
   border: 1.5px solid ${theme.colors.border};
   ${({ isActive, type }) => setActiveButtonStyles(isActive, type)};
 
   border-radius: 5px;
+`;
+
+export const Button = styled(RectButton)`
+  padding: 16px 24px;
 
   flex-direction: row;
   align-items: center;
