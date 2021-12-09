@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { HighlightCard } from "../../components/HighlightCard";
 import {
@@ -21,46 +21,56 @@ import {
   TransactionsList,
   LogoutButton,
 } from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/core";
 
 export interface DataListProps extends TransactionCardData {
   id: number;
 }
 
+const dataKey = "@gofinances:transaction";
+
 export const Dashboard = () => {
-  const data: DataListProps[] = [
-    {
-      id: 1,
-      type: "positive",
-      title: "Desenvolvimento do site",
-      amount: "R$ 12.000,00",
-      date: "05/12/2021",
-      category: { name: "Vendas", icon: "dollar-sign" },
-    },
-    {
-      id: 2,
-      type: "negative",
-      title: "Pizzaria",
-      amount: "R$ 12.000,00",
-      date: "05/12/2021",
-      category: { name: "Alimentação", icon: "coffee" },
-    },
-    {
-      id: 3,
-      type: "negative",
-      title: "Aluguel",
-      amount: "R$ 1.200,00",
-      date: "15/12/2021",
-      category: { name: "Casa", icon: "shopping-bag" },
-    },
-    {
-      id: 4,
-      type: "positive",
-      title: "Desenvolvimento do site",
-      amount: "R$ 12.000,00",
-      date: "20/12/2021",
-      category: { name: "Vendas", icon: "dollar-sign" },
-    },
-  ];
+  const [data, setData] = useState<DataListProps[]>([]);
+
+  async function loadTransactions() {
+    const response = await AsyncStorage.getItem(dataKey);
+    const transactions = response
+      ? (JSON.parse(response) as DataListProps[])
+      : [];
+
+    const transactionsFormatted: DataListProps[] = transactions.map(
+      (transaction) => {
+        const amount = Number(transaction.amount).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+        const date = Intl.DateTimeFormat("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        }).format(new Date(transaction.date));
+
+        return {
+          ...transaction,
+          date,
+          amount,
+        };
+      }
+    );
+
+    setData(transactionsFormatted);
+  }
+
+  useEffect(() => {
+    loadTransactions();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions();
+    }, [])
+  );
 
   return (
     <Container>

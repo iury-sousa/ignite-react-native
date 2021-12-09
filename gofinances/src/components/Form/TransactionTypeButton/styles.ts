@@ -20,12 +20,12 @@ const setActiveButtonStyles = (
 ) => {
   if (isActive) {
     switch (type) {
-      case "up":
+      case "positive":
         return css`
           background-color: ${theme.colors.successLight};
           border-color: ${theme.colors.successLight};
         `;
-      case "down":
+      case "negative":
         return css`
           background-color: ${theme.colors.attentionLight};
           border-color: ${theme.colors.attentionLight};
@@ -55,7 +55,7 @@ export const Icon = styled(Feather)<IconProps>`
   margin-right: 12px;
 
   color: ${({ theme, type }) =>
-    type === "up" ? theme.colors.success : theme.colors.attention};
+    type === "positive" ? theme.colors.success : theme.colors.attention};
 
   font-size: ${RFValue(24)}px;
 `;
