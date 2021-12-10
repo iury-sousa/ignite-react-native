@@ -27,6 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/core";
 import { ActivityIndicator } from "react-native";
 import { useTheme } from "styled-components";
+
 export type DataListProps = TransactionCardData & {
   id: number;
 };
