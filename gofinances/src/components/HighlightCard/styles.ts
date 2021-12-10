@@ -8,7 +8,7 @@ type TypeProps = {
 };
 
 export const Container = styled.View<TypeProps>`
-  width: ${RFValue(286)}px;
+  width: ${RFValue(300)}px;
   padding: 19px 23px;
   padding-bottom: ${RFValue(30)}px;
   margin-right: 16px;

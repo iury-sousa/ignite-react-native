@@ -15,7 +15,7 @@ export type HighlightCardTypes = "up" | "down" | "total";
 type HighlightCardProps = {
   title: string;
   amount: string;
-  lastTransaction: string;
+  lastTransaction?: string;
   type: HighlightCardTypes;
 };
 
@@ -28,7 +28,7 @@ const icon: Record<HighlightCardTypes, string> = {
 export const HighlightCard = ({
   title,
   amount,
-  lastTransaction,
+  lastTransaction = "",
   type,
 }: HighlightCardProps) => {
   return (

@@ -16,12 +16,14 @@ type Category = {
   icon: string;
 };
 
+export type TransactionType = "positive" | "negative";
 export type TransactionCardData = {
-  type: "positive" | "negative";
+  type: TransactionType;
   name: string;
   amount: string;
   category: string;
-  date: string;
+  date: Date;
+  dateFormatted?: string;
 };
 
 type TransactionCardProps = {
@@ -29,7 +31,7 @@ type TransactionCardProps = {
 };
 
 export const TransactionCard = ({ data }: TransactionCardProps) => {
-  const { type, name, amount, date } = data;
+  const { type, name, amount, dateFormatted } = data;
 
   const [category] = categories.filter(
     (category) => category.key === data.category
@@ -48,7 +50,7 @@ export const TransactionCard = ({ data }: TransactionCardProps) => {
           <Icon name={category.icon} />
           <CategoryName>{category.name}</CategoryName>
         </Category>
-        <Date>{date}</Date>
+        <Date>{dateFormatted}</Date>
       </Footer>
     </Container>
   );

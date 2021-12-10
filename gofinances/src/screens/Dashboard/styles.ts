@@ -1,13 +1,11 @@
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import styled from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
+import { BorderlessButton } from "react-native-gesture-handler";
 import {
   getBottomSpace,
   getStatusBarHeight,
 } from "react-native-iphone-x-helper";
-import { FlatList } from "react-native";
-import { DataListProps } from ".";
-import { BorderlessButton } from "react-native-gesture-handler";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import styled from "styled-components/native";
 
 export const Container = styled.View`
   flex: 1;
