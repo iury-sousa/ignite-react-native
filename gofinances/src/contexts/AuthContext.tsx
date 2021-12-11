@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createContext, ReactNode, useContext } from "react";
 import * as AuthSession from "expo-auth-session";
+import { proc } from "react-native-reanimated";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -26,32 +27,19 @@ type AuthorizationResponse = {
 };
 
 const AuthContext = createContext({} as AuthContextData);
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>();
 
   async function signInWithGoogle() {
     try {
-      const CLIENT_ID =
-        "107119917133-4o1gl7rv1hnp2g77tc2of0mob01k3338.apps.googleusercontent.com";
-      const REDIRECT_URI = "https://auth.expo.io/@iury_wemerson/gofinances";
       const RESPONSE_TYPE = "token";
       const SCOPE = encodeURI("profile email");
 
       const authUrl = "https://accounts.google.com/o/oauth2/auth";
 
-      const array: string[] = [
-        authUrl,
-        "?client_id=",
-        CLIENT_ID,
-        "&redirect_uri=",
-        REDIRECT_URI,
-        "&response_type=",
-        RESPONSE_TYPE,
-        "&scope=",
-        SCOPE,
-      ];
-      console.log(array.join(""));
       const authUrlFormatted = `${authUrl}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
 
       const { params, type } = (await AuthSession.startAsync({
