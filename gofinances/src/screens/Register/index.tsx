@@ -23,6 +23,7 @@ import {
 } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../contexts/AuthContext";
 
 type FormData = {
   name: string;
@@ -38,8 +39,6 @@ const schema = yup.object().shape({
     .positive("O valor não pode ser negativo"),
 });
 
-const dataKey = "@gofinances:transaction";
-
 export const Register = () => {
   const [category, setCategory] = useState({
     key: "category",
@@ -48,6 +47,10 @@ export const Register = () => {
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [transactionType, setTransactionType] =
     useState<TransactionTypeButtonType | null>(null);
+
+  const { user } = useAuth();
+
+  const dataKey = `@gofinances:transaction_user:${user?.id}`;
 
   const {
     control,
