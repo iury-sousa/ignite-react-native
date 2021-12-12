@@ -1,6 +1,7 @@
 import styled from "styled-components/native";
 import { FlatList, FlatListProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { CarDTO } from "../../dtos/CarDTO";
 
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.backgroundPrimary};
@@ -30,7 +31,9 @@ export const TotalCars = styled.Text`
   font-family: ${({ theme }) => theme.fonts.primary400};
 `;
 
-export const CartList = styled(FlatList).attrs({
+export const CartList = styled(
+  FlatList as new (props: FlatListProps<CarDTO>) => FlatList<CarDTO>
+).attrs({
   contentContainerStyle: { padding: 24 },
   showsVerticalScrollIndicator: false,
 })``;
