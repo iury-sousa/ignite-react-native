@@ -10,7 +10,7 @@ export const Container = styled.View`
 `;
 
 export const ImageIndexes = styled.View`
-  padding-right: 24px;
+  /* padding-right: 24px; */
 
   flex-direction: row;
   align-self: flex-end;
