@@ -14,13 +14,21 @@ import {
   Footer,
 } from "./styles";
 
+import { useNavigation } from "@react-navigation/native";
+
 import ArrowSvg from "../../assets/arrow.svg";
 import { StatusBar } from "react-native";
 import { Button } from "../../components/Button";
 import { Calendar } from "../../components/Calendar";
 
-export function Scheduting() {
+export function Scheduling() {
   const theme = useTheme();
+  const navigation = useNavigation();
+
+  function handleConfirmRental() {
+    navigation.navigate("SchedulingDetails" as never);
+  }
+
   return (
     <Container>
       <StatusBar
@@ -52,7 +60,7 @@ export function Scheduting() {
         <Calendar />
       </Content>
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Confirmar" onPress={handleConfirmRental} />
       </Footer>
     </Container>
   );

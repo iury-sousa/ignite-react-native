@@ -41,8 +41,16 @@ import { Button } from "../../components/Button";
 import { useTheme } from "styled-components";
 import { RFValue } from "react-native-responsive-fontsize";
 
+import { useNavigation } from "@react-navigation/native";
+
 export function SchedulingDetails() {
   const theme = useTheme();
+  const navigation = useNavigation();
+
+  function handleConfirmRental() {
+    navigation.navigate("SchedulingComplete" as never);
+  }
+
   return (
     <Container>
       <Header>
@@ -110,6 +118,7 @@ export function SchedulingDetails() {
         <Button
           title="Escolher período do aluguel"
           color={theme.colors.success}
+          onPress={handleConfirmRental}
         />
       </Footer>
     </Container>
