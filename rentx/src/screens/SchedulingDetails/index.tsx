@@ -1,4 +1,6 @@
 import React from "react";
+import { Feather } from "@expo/vector-icons";
+
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
@@ -22,13 +24,25 @@ import {
   Rent,
   Period,
   Price,
-  About,
   Accessories,
   Footer,
+  RentalPeriod,
+  CalendarIcon,
+  DateInfo,
+  DateTitle,
+  DateValue,
+  RentalPrice,
+  RentalPriceLabel,
+  RentalPriceDetails,
+  RentalPriceQuota,
+  RentalPriceTotal,
 } from "./styles";
 import { Button } from "../../components/Button";
+import { useTheme } from "styled-components";
+import { RFValue } from "react-native-responsive-fontsize";
 
-export function CardDetails() {
+export function SchedulingDetails() {
+  const theme = useTheme();
   return (
     <Container>
       <Header>
@@ -60,16 +74,43 @@ export function CardDetails() {
           <Accessory name="Auto" icon={exchangeSvg} />
           <Accessory name="2 pessoas" icon={peopleSvg} />
         </Accessories>
+        <RentalPeriod>
+          <CalendarIcon>
+            <Feather
+              name="calendar"
+              color={theme.colors.shape}
+              size={RFValue(24)}
+            />
+          </CalendarIcon>
+          <DateInfo>
+            <DateTitle>De</DateTitle>
+            <DateValue>18/06/2021</DateValue>
+          </DateInfo>
+          <Feather
+            name="chevron-right"
+            color={theme.colors.text}
+            size={RFValue(10)}
+          />
+          <DateInfo>
+            <DateTitle>De</DateTitle>
+            <DateValue>18/06/2021</DateValue>
+          </DateInfo>
+        </RentalPeriod>
 
-        <About>
-          Este é automóvel desportivo. Surgiu do lendário touro de lide
-          indultado na praça Real Maestranza de Sevilla. É um belíssimo carro
-          para quem gosta de acelerar.
-        </About>
+        <RentalPrice>
+          <RentalPriceLabel>TOTAL</RentalPriceLabel>
+          <RentalPriceDetails>
+            <RentalPriceQuota>R$ 580,00 x3 diárias</RentalPriceQuota>
+            <RentalPriceTotal>R$ 2.980,00</RentalPriceTotal>
+          </RentalPriceDetails>
+        </RentalPrice>
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" />
+        <Button
+          title="Escolher período do aluguel"
+          color={theme.colors.success}
+        />
       </Footer>
     </Container>
   );
