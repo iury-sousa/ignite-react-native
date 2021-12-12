@@ -18,6 +18,7 @@ import theme from "./styles/theme";
 import { CardDetails } from "./screens/CardDetails";
 import { Scheduting } from "./screens/Scheduting";
 import { SchedulingDetails } from "./screens/SchedulingDetails";
+import { SchedulingComplete } from "./screens/SchedulingComplete";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -37,7 +38,8 @@ export default function App() {
       {/* <Home /> */}
       {/* <CardDetails /> */}
       {/* <Scheduting /> */}
-      <SchedulingDetails />
+      {/* <SchedulingDetails /> */}
+      <SchedulingComplete />
     </ThemeProvider>
   );
 }
