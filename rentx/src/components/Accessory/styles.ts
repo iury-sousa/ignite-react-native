@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 
 export const Container = styled.View`
   width: 108px;
-  height: 108px;
+  height: 96px;
   padding: 16px;
   margin-bottom: 8px;
 
@@ -14,6 +14,7 @@ export const Container = styled.View`
 `;
 
 export const Name = styled.Text`
+  margin-top: 12px;
   color: ${({ theme }) => theme.colors.text};
 
   font-family: ${({ theme }) => theme.fonts.primary500};
