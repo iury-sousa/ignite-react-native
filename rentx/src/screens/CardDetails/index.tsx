@@ -35,7 +35,7 @@ export function CardDetails() {
   const { car } = route.params as Params;
 
   function handleConfirmRental() {
-    navigation.navigate("Scheduling" as never);
+    navigation.navigate("Scheduling" as never, { car } as never);
   }
 
   function handleBack() {

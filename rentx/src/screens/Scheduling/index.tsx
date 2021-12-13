@@ -14,10 +14,10 @@ import {
   Footer,
 } from "./styles";
 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import ArrowSvg from "../../assets/arrow.svg";
-import { StatusBar } from "react-native";
+import { Alert, StatusBar } from "react-native";
 import { Button } from "../../components/Button";
 import {
   Calendar,
@@ -25,6 +25,19 @@ import {
   generateInterval,
   MarkedDateProps,
 } from "../../components/Calendar";
+import { format } from "date-fns";
+import { getPlatformDate } from "../../utils/getPlatformDate";
+import { CarDTO } from "../../dtos/CarDTO";
+
+type RentalPeriod = {
+  start: string;
+  end: string;
+};
+
+type Params = {
+  car: CarDTO;
+  dates: string[];
+};
 
 export function Scheduling() {
   const [lastSelectedDate, setLastSelectedDate] = useState<DateProps>(
@@ -34,11 +47,25 @@ export function Scheduling() {
     {} as MarkedDateProps
   );
 
+  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
+    {} as RentalPeriod
+  );
+
   const theme = useTheme();
   const navigation = useNavigation();
 
+  const route = useRoute();
+  const { car } = route.params as Params;
+
   function handleConfirmRental() {
-    navigation.navigate("SchedulingDetails" as never);
+    if (!rentalPeriod.start || !rentalPeriod.end) {
+      Alert.alert("Selecione o intervalo para alugar");
+      return;
+    }
+    navigation.navigate(
+      "SchedulingDetails" as never,
+      { car, dates: Object.keys(markedDates) } as never
+    );
   }
 
   function handleBack() {
@@ -56,6 +83,16 @@ export function Scheduling() {
     setLastSelectedDate(end);
     const interval = generateInterval(start, end);
     setMarkedDates(interval);
+
+    const intervalKeys = Object.keys(interval);
+
+    const firstDate = intervalKeys[0];
+    const endDate = intervalKeys[intervalKeys.length - 1];
+
+    setRentalPeriod({
+      start: format(getPlatformDate(new Date(firstDate)), "dd/MM/yyyy"),
+      end: format(getPlatformDate(new Date(endDate)), "dd/MM/yyyy"),
+    });
   }
 
   return (
@@ -75,12 +112,16 @@ export function Scheduling() {
         <RentalPeriod>
           <DateInfo>
             <DateTitle>DE</DateTitle>
-            <DateValue selected={false}>01/12/2021</DateValue>
+            <DateValue selected={!!rentalPeriod.start}>
+              {rentalPeriod.start}
+            </DateValue>
           </DateInfo>
           <ArrowSvg color={theme.colors.text} />
           <DateInfo>
             <DateTitle>ATÉ</DateTitle>
-            <DateValue selected={false}>12/12/2021</DateValue>
+            <DateValue selected={!!rentalPeriod.end}>
+              {rentalPeriod.end}
+            </DateValue>
           </DateInfo>
         </RentalPeriod>
       </Header>
