@@ -36,7 +36,6 @@ type RentalPeriod = {
 
 type Params = {
   car: CarDTO;
-  dates: string[];
 };
 
 export function Scheduling() {
