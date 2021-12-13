@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "styled-components";
 import { BackButton } from "../../components/BackButton";
 
@@ -19,14 +19,43 @@ import { useNavigation } from "@react-navigation/native";
 import ArrowSvg from "../../assets/arrow.svg";
 import { StatusBar } from "react-native";
 import { Button } from "../../components/Button";
-import { Calendar } from "../../components/Calendar";
+import {
+  Calendar,
+  DateProps,
+  generateInterval,
+  MarkedDateProps,
+} from "../../components/Calendar";
 
 export function Scheduling() {
+  const [lastSelectedDate, setLastSelectedDate] = useState<DateProps>(
+    {} as DateProps
+  );
+  const [markedDates, setMarkedDates] = useState<MarkedDateProps>(
+    {} as MarkedDateProps
+  );
+
   const theme = useTheme();
   const navigation = useNavigation();
 
   function handleConfirmRental() {
     navigation.navigate("SchedulingDetails" as never);
+  }
+
+  function handleBack() {
+    navigation.goBack();
+  }
+
+  function handleDayPress(date: DateProps) {
+    let start = !lastSelectedDate.timestamp ? date : lastSelectedDate;
+    let end = date;
+    if (start.timestamp > end.timestamp) {
+      start = end;
+      end = start;
+    }
+
+    setLastSelectedDate(end);
+    const interval = generateInterval(start, end);
+    setMarkedDates(interval);
   }
 
   return (
@@ -37,7 +66,7 @@ export function Scheduling() {
         translucent
       />
       <Header>
-        <BackButton onPress={() => null} color={theme.colors.shape} />
+        <BackButton onPress={handleBack} color={theme.colors.shape} />
         <Title>
           Escolha uma{"\n"}
           data de início e{"\n"}
@@ -46,9 +75,9 @@ export function Scheduling() {
         <RentalPeriod>
           <DateInfo>
             <DateTitle>DE</DateTitle>
-            <DateValue selected>01/12/2021</DateValue>
+            <DateValue selected={false}>01/12/2021</DateValue>
           </DateInfo>
-          <ArrowSvg />
+          <ArrowSvg color={theme.colors.text} />
           <DateInfo>
             <DateTitle>ATÉ</DateTitle>
             <DateValue selected={false}>12/12/2021</DateValue>
@@ -57,7 +86,7 @@ export function Scheduling() {
       </Header>
 
       <Content>
-        <Calendar />
+        <Calendar markedDates={markedDates} onDayPress={handleDayPress} />
       </Content>
       <Footer>
         <Button title="Confirmar" onPress={handleConfirmRental} />
