@@ -11,18 +11,26 @@ import {
   Header,
   TotalCars,
   CartList,
+  MyCarsButton,
 } from "./styles";
 import { api } from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
 import { Load } from "../../components/Load";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "styled-components";
 
 export function Home() {
   const navigation = useNavigation();
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
 
   function handleCarDetails(car: CarDTO) {
     navigation.navigate("CarDetails" as never, { car } as never);
+  }
+
+  function handleOpneMyCars() {
+    navigation.navigate("MyCars" as never);
   }
 
   useEffect(() => {
@@ -55,6 +63,7 @@ export function Home() {
 
     fetchCars();
   }, []);
+
   return (
     <Container>
       <StatusBar
@@ -80,6 +89,15 @@ export function Home() {
           )}
         />
       )}
+
+      <MyCarsButton>
+        <Ionicons
+          name="ios-car-sport"
+          size={32}
+          color={theme.colors.shape}
+          onPress={handleOpneMyCars}
+        />
+      </MyCarsButton>
     </Container>
   );
 }
