@@ -13,6 +13,9 @@ import {
 } from "@expo-google-fonts/archivo";
 import AppLoading from "expo-app-loading";
 
+import "intl";
+import "intl/locale-data/jsonp/pt-BR";
+
 import { Home } from "./screens/Home";
 
 import { ThemeProvider } from "styled-components/native";

@@ -21,15 +21,31 @@ export function Home() {
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  function handleCarDetails() {
-    navigation.navigate("CarDetails" as never);
+  function handleCarDetails(car: CarDTO) {
+    navigation.navigate("CarDetails" as never, { car } as never);
   }
 
   useEffect(() => {
     async function fetchCars() {
       try {
         const response = await api.get<CarDTO[]>("/cars");
-        setCars(response.data);
+
+        const cars = response.data.map((car) => {
+          const formattedPrice = car.rent.price.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          });
+
+          return {
+            ...car,
+            rent: {
+              ...car.rent,
+              formattedPrice,
+            },
+          };
+        });
+
+        setCars(cars);
       } catch (error) {
         console.log(error);
       } finally {
@@ -60,7 +76,7 @@ export function Home() {
           data={cars}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
-            <Car data={item} onPress={handleCarDetails} />
+            <Car data={item} onPress={() => handleCarDetails(item)} />
           )}
         />
       )}

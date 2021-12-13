@@ -34,7 +34,7 @@ export const Content = styled.ScrollView.attrs({
 
 export const Details = styled.View`
   width: 100%;
-  margin-top: 38px;
+  margin-top: 24px;
 
   flex-direction: row;
   align-items: center;
