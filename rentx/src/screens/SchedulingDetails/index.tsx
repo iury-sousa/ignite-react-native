@@ -53,6 +53,7 @@ type RentalPeriod = {
 };
 
 export function SchedulingDetails() {
+  const [loading, setLoading] = useState(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
     {} as RentalPeriod
   );
@@ -66,11 +67,19 @@ export function SchedulingDetails() {
   const rentTotal = Number((dates.length - 1) * car.rent.price);
 
   async function handleConfirmRental() {
+    setLoading(true);
     const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
     const unavailable_dates = [
       ...schedulesByCar.data.unavailable_dates,
       ...dates,
     ];
+
+    await api.post("/schedules_byuser", {
+      user_id: 1,
+      car,
+      startDate: dates[0],
+      endDate: dates[dates.length - 1],
+    });
 
     api
       .put(`/schedules_bycars/${car.id}`, { id: car.id, unavailable_dates })
@@ -78,6 +87,7 @@ export function SchedulingDetails() {
       .catch((error) => {
         console.log(error);
         Alert.alert("Não foi possível confirmar o agendamento");
+        setLoading(false);
       });
   }
 
@@ -166,8 +176,9 @@ export function SchedulingDetails() {
 
       <Footer>
         <Button
-          title="Escolher período do aluguel"
+          title="Alugar agora"
           color={theme.colors.success}
+          loading={loading}
           onPress={handleConfirmRental}
         />
       </Footer>
