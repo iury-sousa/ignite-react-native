@@ -48,7 +48,7 @@ export function CardDetails() {
         <BackButton onPress={handleBack} />
       </Header>
       <CarImages>
-        <ImageSlider imageUrl={car.photos} />
+        <ImageSlider imagesUrl={car.photos} />
       </CarImages>
 
       <Content>
