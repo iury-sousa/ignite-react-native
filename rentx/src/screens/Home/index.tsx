@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
-import Logo from "../../assets/logo.svg";
-import { Car } from "../../components/Car";
-
-import { useNavigation } from "@react-navigation/native";
-import {
-  Container,
-  HeaderContent,
-  Header,
-  TotalCars,
-  CartList,
-  MyCarsButton,
-} from "./styles";
-import { api } from "../../services/api";
-import { CarDTO } from "../../dtos/CarDTO";
-import { Load } from "../../components/Load";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "styled-components";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { BackHandler, StatusBar } from "react-native";
+import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
+import { RFValue } from "react-native-responsive-fontsize";
+import { useTheme } from "styled-components";
+import Logo from "../../assets/logo.svg";
+import { Car } from "../../components/Car";
+import { Load } from "../../components/Load";
+import { CarDTO } from "../../dtos/CarDTO";
+import { api } from "../../services/api";
+import {
+  CartList,
+  Container,
+  Header,
+  HeaderContent,
+  MyCarsButton,
+  TotalCars,
+} from "./styles";
 
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
@@ -100,6 +99,13 @@ export function Home() {
     fetchCars();
   }, []);
 
+  useEffect(() => {
+    // Desabilita a ação do botão voltar
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      return true;
+    });
+  }, []);
+
   return (
     <Container>
       <StatusBar
@@ -111,9 +117,11 @@ export function Home() {
       <Header>
         <HeaderContent>
           <Logo width={RFValue(108)} height={RFValue(12)} />
-          <TotalCars>
-            Total de {cars.length.toString().padStart(2, "0")} carros
-          </TotalCars>
+          {!loading && (
+            <TotalCars>
+              Total de {cars.length.toString().padStart(2, "0")} carros
+            </TotalCars>
+          )}
         </HeaderContent>
       </Header>
       <Load isLoading={loading} />
