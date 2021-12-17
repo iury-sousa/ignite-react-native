@@ -9,6 +9,7 @@ type ButtonProps = RectButtonProps & {
   title: string;
   color?: string | null;
   loading?: boolean;
+  light?: boolean;
 };
 
 export function Button({
@@ -16,6 +17,8 @@ export function Button({
   color,
   enabled = true,
   loading = false,
+  light = false,
+  style,
   ...rest
 }: ButtonProps) {
   const theme = useTheme();
@@ -24,12 +27,12 @@ export function Button({
       {...rest}
       color={color}
       enabled={enabled && !loading}
-      style={{ opacity: !enabled || loading ? 0.7 : 1 }}
+      style={[style, { opacity: !enabled || loading ? 0.7 : 1 }]}
     >
       {loading ? (
         <ActivityIndicator color={theme.colors.shape} />
       ) : (
-        <Title>{title}</Title>
+        <Title light={light}>{title}</Title>
       )}
     </Container>
   );
