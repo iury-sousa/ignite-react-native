@@ -9,10 +9,13 @@ import Animated, {
   withTiming,
   interpolate,
   Extrapolate,
+  runOnJS,
 } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 
 export function Splash() {
   const splashAnimation = useSharedValue(0);
+  const navigation = useNavigation();
 
   const brandStyle = useAnimatedStyle(() => {
     return {
@@ -46,8 +49,15 @@ export function Splash() {
     };
   });
 
+  function startApp() {
+    navigation.navigate("Home" as never);
+  }
+
   useEffect(() => {
-    splashAnimation.value = withTiming(50, { duration: 1000 });
+    splashAnimation.value = withTiming(50, { duration: 1000 }, () => {
+      "worklet";
+      runOnJS(startApp)();
+    });
   }, []);
 
   return (
