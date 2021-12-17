@@ -26,7 +26,7 @@ import {
 } from "./styles";
 import { format } from "date-fns";
 import { getPlatformDate } from "../../utils/getPlatformDate";
-import { Load } from "../../components/Load";
+import { LoadAnimation } from "../../components/LoadAnimation";
 
 type CarProps = {
   id: string;
@@ -80,7 +80,7 @@ export function MyCars() {
         <SubTitle>Conforto, segurança e praticidade.</SubTitle>
       </Header>
 
-      <Load isLoading={loading} />
+      <LoadAnimation isLoading={loading} />
 
       {!loading && (
         <Content>

@@ -13,7 +13,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import Logo from "../../assets/logo.svg";
 import { Car } from "../../components/Car";
-import { Load } from "../../components/Load";
+import { LoadAnimation } from "../../components/LoadAnimation";
 import { CarDTO } from "../../dtos/CarDTO";
 import { api } from "../../services/api";
 import {
@@ -124,7 +124,7 @@ export function Home() {
           )}
         </HeaderContent>
       </Header>
-      <Load isLoading={loading} />
+      <LoadAnimation isLoading={loading} />
 
       {!loading && (
         <CartList
