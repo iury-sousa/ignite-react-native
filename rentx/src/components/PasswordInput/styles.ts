@@ -1,9 +1,19 @@
 import { BorderlessButton } from "react-native-gesture-handler";
 import { RFValue } from "react-native-responsive-fontsize";
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 
-export const Container = styled.View`
+type ContainerProps = {
+  isFocused: boolean;
+};
+export const Container = styled.View<ContainerProps>`
   margin-bottom: 8px;
+
+  ${({ theme, isFocused }) =>
+    isFocused &&
+    css`
+      border-bottom-width: 2px;
+      border-bottom-color: ${theme.colors.main};
+    `}
 
   flex-direction: row;
 `;
@@ -23,7 +33,7 @@ export const InputText = styled.TextInput`
   padding: 0 24px;
 
   background-color: ${({ theme }) => theme.colors.backgroundSecondary};
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.title};
 
   font-size: ${RFValue(15)}px;
   font-family: ${({ theme }) => theme.fonts.primary400};
