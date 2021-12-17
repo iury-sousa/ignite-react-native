@@ -3,6 +3,7 @@ import { FlatList, FlatListProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { CarDTO } from "../../dtos/CarDTO";
 import { RectButton } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
 
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.backgroundPrimary};
@@ -39,7 +40,7 @@ export const CartList = styled(
   showsVerticalScrollIndicator: false,
 })``;
 
-export const MyCarsButton = styled(RectButton)`
+export const MyCarsButton = styled(Animated.View)`
   width: 60px;
   height: 60px;
 

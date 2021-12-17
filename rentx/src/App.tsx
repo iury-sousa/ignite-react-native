@@ -1,4 +1,3 @@
-import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 
 import {
@@ -15,8 +14,6 @@ import AppLoading from "expo-app-loading";
 
 import "intl";
 import "intl/locale-data/jsonp/pt-BR";
-
-import { Home } from "./screens/Home";
 
 import { ThemeProvider } from "styled-components/native";
 import theme from "./styles/theme";
