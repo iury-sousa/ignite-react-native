@@ -6,6 +6,7 @@ import {
   IconContainer,
   InputText,
   ChangePasswordVisibilityButton,
+  Separator,
 } from "./styles";
 import { TextInputProps } from "react-native";
 
@@ -32,27 +33,29 @@ export function PasswordInput({ iconName, value, ...rest }: InputProps) {
   }
 
   return (
-    <Container isFocused={isFocused}>
-      <IconContainer>
+    <Container>
+      <IconContainer isFocused={isFocused}>
         <Feather
           name={iconName}
           size={24}
           color={isFocused || isFilled ? theme.colors.main : theme.colors.text}
         />
       </IconContainer>
+      <Separator isFocused={isFocused} />
       <InputText
         {...rest}
         secureTextEntry={!isPasswordVisible}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         value={value}
+        isFocused={isFocused}
       />
 
       <ChangePasswordVisibilityButton onPress={handlePasswordVisibilityChange}>
-        <IconContainer style={{ marginRight: 0 }}>
+        <IconContainer style={{ marginRight: 0 }} isFocused={isFocused}>
           <Feather
             name={!isPasswordVisible ? "eye" : "eye-off"}
-            size={24}
+            size={20}
             color={theme.colors.text}
           />
         </IconContainer>

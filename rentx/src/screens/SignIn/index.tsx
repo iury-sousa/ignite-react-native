@@ -52,6 +52,8 @@ export function SignIn() {
               placeholder="Senha"
               onChangeText={setPassword}
               value={password}
+              autoCorrect={false}
+              autoCapitalize="none"
             />
           </Form>
 

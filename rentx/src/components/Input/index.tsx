@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
-import { Container, IconContainer, InputText } from "./styles";
+import { Container, IconContainer, InputText, Separator } from "./styles";
 import { TextInputProps } from "react-native";
 
 type InputProps = TextInputProps & {
@@ -23,19 +23,21 @@ export function Input({ iconName, value, ...rest }: InputProps) {
   }
 
   return (
-    <Container isFocused={isFocused}>
-      <IconContainer>
+    <Container>
+      <IconContainer isFocused={isFocused}>
         <Feather
           name={iconName}
           size={24}
           color={isFocused || isFilled ? theme.colors.main : theme.colors.text}
         />
       </IconContainer>
+      <Separator isFocused={isFocused} />
       <InputText
         {...rest}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         value={value}
+        isFocused={isFocused}
       />
     </Container>
   );
