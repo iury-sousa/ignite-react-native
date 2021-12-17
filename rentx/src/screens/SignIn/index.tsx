@@ -33,12 +33,11 @@ export function SignIn() {
         password: yup.string().required("A senha é obrigatória"),
       });
 
-      await schema.validate({ password, email });
+      await schema.validate({ password, email }, { abortEarly: false });
       Alert.alert("Passou");
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        console.log({ error });
-        Alert.alert("Atenção", error.message);
+        Alert.alert("Atenção", error.errors[0]);
       } else {
         Alert.alert(
           "Erro na autenticação",

@@ -1,12 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Keyboard, KeyboardAvoidingView } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Alert, Keyboard, KeyboardAvoidingView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useTheme } from "styled-components";
 import { BackButton } from "../../../components/BackButton";
 import { Bullet } from "../../../components/Bullet";
 import { Button } from "../../../components/Button";
-import { Input } from "../../../components/Input";
 import { PasswordInput } from "../../../components/PasswordInput";
 import {
   Container,
@@ -18,13 +17,31 @@ import {
   Title,
 } from "./styles";
 
+type Params = {
+  user: { name: string; email: string; driverLisence: string };
+};
+
 export function SignUpSecondStep() {
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   const theme = useTheme();
 
   const navigation = useNavigation();
+  const route = useRoute();
+  const { user } = route.params as Params;
 
   function handleBack() {
     navigation.goBack();
+  }
+
+  function handleRegister() {
+    if (!password || !passwordConfirm) {
+      return Alert.alert("Informe a senha e a confirmação.");
+    }
+    if (password !== passwordConfirm) {
+      return Alert.alert("As senhas não são iguais.");
+    }
   }
   return (
     <KeyboardAvoidingView behavior="position" enabled>
@@ -33,8 +50,8 @@ export function SignUpSecondStep() {
           <Header>
             <BackButton onPress={handleBack} />
             <Steps>
-              <Bullet active />
               <Bullet />
+              <Bullet active />
             </Steps>
           </Header>
           <Title>
@@ -48,11 +65,29 @@ export function SignUpSecondStep() {
 
           <Form>
             <FormTitle>2. Senha</FormTitle>
-            <PasswordInput iconName="lock" placeholder="Senha" />
-            <PasswordInput iconName="lock" placeholder="Repetir senha" />
+            <PasswordInput
+              iconName="lock"
+              placeholder="Senha"
+              autoCorrect={false}
+              value={password}
+              autoCapitalize="none"
+              onChangeText={setPassword}
+            />
+            <PasswordInput
+              iconName="lock"
+              placeholder="Repetir senha"
+              autoCorrect={false}
+              autoCapitalize="none"
+              value={passwordConfirm}
+              onChangeText={setPasswordConfirm}
+            />
           </Form>
 
-          <Button title="Cadastrar" color={theme.colors.success} />
+          <Button
+            title="Cadastrar"
+            color={theme.colors.success}
+            onPress={handleRegister}
+          />
         </Container>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
