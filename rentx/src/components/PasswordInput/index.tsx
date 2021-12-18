@@ -49,6 +49,7 @@ export function PasswordInput({ iconName, value, ...rest }: InputProps) {
         onBlur={handleInputBlur}
         value={value}
         isFocused={isFocused}
+        autoCorrect={false}
       />
 
       <ChangePasswordVisibilityButton onPress={handlePasswordVisibilityChange}>

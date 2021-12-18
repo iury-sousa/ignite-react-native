@@ -12,8 +12,6 @@ type OptionProps = {
 };
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.backgroundPrimary};
-
-  flex: 1;
 `;
 
 export const Header = styled.View`
@@ -77,8 +75,6 @@ export const PhotoButton = styled(RectButton)`
 export const Content = styled.View`
   padding: 0 24px;
   margin-top: 156px;
-
-  flex: 1;
 `;
 
 export const Options = styled.View`
@@ -113,3 +109,5 @@ export const OptionTitle = styled.Text<OptionProps>`
   font-family: ${({ theme, active }) =>
     active ? theme.fonts.secondary600 : theme.fonts.secondary500};
 `;
+
+export const Section = styled.View``;
