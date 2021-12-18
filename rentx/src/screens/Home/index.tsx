@@ -69,6 +69,8 @@ export function Home() {
   // }
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchCars() {
       try {
         const response = await api.get<CarDTO[]>("/cars");
@@ -85,15 +87,23 @@ export function Home() {
           };
         });
 
-        setCars(cars);
+        if (isMounted) {
+          setCars(cars);
+        }
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchCars();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // useEffect(() => {

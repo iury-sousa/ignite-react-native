@@ -1,17 +1,22 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { database } from "../database";
+import { User as UserModel } from "../database/model/User";
 import { api } from "../services/api";
 
 type User = {
   id: string;
+  userId: string;
   email: string;
   name: string;
   driver_license: string;
   avatar: string;
-};
-
-export type AuthState = {
   token: string;
-  user: User;
 };
 
 type SignInCredentials = {
@@ -20,7 +25,7 @@ type SignInCredentials = {
 };
 
 type AuthContextData = {
-  user?: User;
+  user?: User | null;
   signIn: (credentials: SignInCredentials) => Promise<void>;
 };
 
@@ -31,22 +36,60 @@ type AuthProviderProps = {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [data, setData] = useState<AuthState | null>();
+  const [data, setData] = useState<User | null>();
 
   async function signIn(credentials: SignInCredentials) {
-    const response = await api.post("/sessions", credentials);
+    try {
+      const response = await api.post<{ token: string; user: User }>(
+        "/sessions",
+        credentials
+      );
 
-    const { token, user } = response.data;
-    api.defaults.headers = {
-      ...api.defaults.headers,
-      Authorization: `Bearer ${token}`,
-    } as never;
+      const { token, user } = response.data;
+      api.defaults.headers = {
+        ...api.defaults.headers,
+        Authorization: `Bearer ${token}`,
+      } as never;
 
-    setData({ token, user });
+      const userCollection = database.get<UserModel>("users");
+      await database.write(async () => {
+        await userCollection.create((newUser) => {
+          (newUser.userId = user.id),
+            (newUser.name = user.name),
+            (newUser.email = user.email),
+            (newUser.avatar = user.avatar),
+            (newUser.driverLicense = user.driver_license),
+            (newUser.token = token);
+        });
+      });
+
+      setData({ ...user, token });
+    } catch (error) {
+      throw error;
+    }
   }
 
+  useEffect(() => {
+    async function loadUserData() {
+      const userCollection = database.get<UserModel>("users");
+      const response = await userCollection.query().fetch();
+
+      if (response.length > 0) {
+        const userData = response[0]._raw as unknown as User;
+        api.defaults.headers = {
+          ...api.defaults.headers,
+          Authorization: `Bearer ${userData.token}`,
+        } as never;
+
+        setData(userData);
+      }
+    }
+
+    loadUserData();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ signIn, user: data?.user }}>
+    <AuthContext.Provider value={{ signIn, user: data }}>
       {children}
     </AuthContext.Provider>
   );
