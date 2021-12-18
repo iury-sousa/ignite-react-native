@@ -42,6 +42,15 @@ export function SignUpSecondStep() {
     if (password !== passwordConfirm) {
       return Alert.alert("As senhas não são iguais.");
     }
+
+    navigation.navigate(
+      "Confirmation" as never,
+      {
+        title: "Conta criada!",
+        message: "Agora é só fazer login\ne aproveitar.",
+        nextScreenRoute: "SignIn",
+      } as never
+    );
   }
   return (
     <KeyboardAvoidingView behavior="position" enabled>
