@@ -14,13 +14,10 @@ import { SignUpSecondStep } from "../screens/SignUp/SecondStep";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
-export function StackRoutes() {
+export function AppStackRoutes() {
   return (
     <Navigator screenOptions={{ headerShown: false }} initialRouteName="Home">
       {/* <Screen name="Splash" component={Splash} /> */}
-      <Screen name="SignIn" component={SignIn} />
-      <Screen name="SignUpFirstStep" component={SignUpFirstStep} />
-      <Screen name="SignUpSecondStep" component={SignUpSecondStep} />
       <Screen
         name="Home"
         component={Home}

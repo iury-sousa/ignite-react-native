@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { BackHandler, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
@@ -31,42 +31,42 @@ export function Home() {
   const navigation = useNavigation();
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme();
+  // const theme = useTheme();
 
-  const positionY = useSharedValue(0);
-  const positionX = useSharedValue(0);
+  // const positionY = useSharedValue(0);
+  // const positionX = useSharedValue(0);
 
-  const myCarsButtonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: positionX.value },
-        { translateY: positionY.value },
-      ],
-    };
-  });
+  // const myCarsButtonStyle = useAnimatedStyle(() => {
+  //   return {
+  //     transform: [
+  //       { translateX: positionX.value },
+  //       { translateY: positionY.value },
+  //     ],
+  //   };
+  // });
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart(_, context: any) {
-      context.positionX = positionX.value;
-      context.positionY = positionY.value;
-    },
-    onActive(event, context: any) {
-      positionX.value = context.positionX + event.translationX;
-      positionY.value = context.positionY + event.translationY;
-    },
-    onEnd() {
-      positionX.value = withSpring(0);
-      positionY.value = withSpring(0);
-    },
-  });
+  // const onGestureEvent = useAnimatedGestureHandler({
+  //   onStart(_, context: any) {
+  //     context.positionX = positionX.value;
+  //     context.positionY = positionY.value;
+  //   },
+  //   onActive(event, context: any) {
+  //     positionX.value = context.positionX + event.translationX;
+  //     positionY.value = context.positionY + event.translationY;
+  //   },
+  //   onEnd() {
+  //     positionX.value = withSpring(0);
+  //     positionY.value = withSpring(0);
+  //   },
+  // });
 
   function handleCarDetails(car: CarDTO) {
     navigation.navigate("CarDetails" as never, { car } as never);
   }
 
-  function handleOpneMyCars() {
-    navigation.navigate("MyCars" as never);
-  }
+  // function handleOpneMyCars() {
+  //   navigation.navigate("MyCars" as never);
+  // }
 
   useEffect(() => {
     async function fetchCars() {
@@ -96,12 +96,12 @@ export function Home() {
     fetchCars();
   }, []);
 
-  useEffect(() => {
-    // Desabilita a ação do botão voltar
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      return true;
-    });
-  }, []);
+  // useEffect(() => {
+  //   // Desabilita a ação do botão voltar
+  //   BackHandler.addEventListener("hardwareBackPress", () => {
+  //     return true;
+  //   });
+  // }, []);
 
   return (
     <Container>
@@ -132,7 +132,7 @@ export function Home() {
           )}
         />
       )}
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
+      {/* <PanGestureHandler onGestureEvent={onGestureEvent}>
         <MyCarsButton style={myCarsButtonStyle}>
           <ButtonAnimated>
             <Ionicons
@@ -143,7 +143,7 @@ export function Home() {
             />
           </ButtonAnimated>
         </MyCarsButton>
-      </PanGestureHandler>
+      </PanGestureHandler> */}
     </Container>
   );
 }
