@@ -5,7 +5,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "experimentalDecorators": true
   },
   "extends": "expo/tsconfig.base",
   "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
