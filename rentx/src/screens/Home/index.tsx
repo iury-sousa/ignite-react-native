@@ -74,17 +74,14 @@ export function Home() {
         const response = await api.get<CarDTO[]>("/cars");
 
         const cars = response.data.map((car) => {
-          const formattedPrice = car.rent.price.toLocaleString("pt-BR", {
+          const formattedPrice = car.price.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
           });
 
           return {
             ...car,
-            rent: {
-              ...car.rent,
-              formattedPrice,
-            },
+            formattedPrice,
           };
         });
 

@@ -20,7 +20,7 @@ type CarProps = RectButtonProps & {
 };
 
 export function Car({ data, ...rest }: CarProps) {
-  const { brand, name, rent, thumbnail, fuel_type } = data;
+  const { brand, name, period, formattedPrice, thumbnail, fuel_type } = data;
 
   const MotorIcon = getAccessoryIcon(fuel_type);
   return (
@@ -31,8 +31,8 @@ export function Car({ data, ...rest }: CarProps) {
 
         <About>
           <Rent>
-            <Period>{rent.period}</Period>
-            <Price>{rent.formattedPrice}</Price>
+            <Period>{period}</Period>
+            <Price>{formattedPrice}</Price>
           </Rent>
 
           <Type>

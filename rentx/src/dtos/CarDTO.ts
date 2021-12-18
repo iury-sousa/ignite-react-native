@@ -14,15 +14,9 @@ type Accessory = {
   name: string;
 };
 
-type Photo = {
+export type Photo = {
   id: string;
   photo: string;
-};
-
-type Rent = {
-  period: string;
-  price: number;
-  formattedPrice?: string;
 };
 
 export type CarDTO = {
@@ -30,9 +24,11 @@ export type CarDTO = {
   brand: string;
   name: string;
   about: string;
-  rent: Rent;
+  period: string;
+  price: number;
+  formattedPrice?: string;
   fuel_type: FuelType;
   thumbnail: string;
   accessories: Accessory[];
-  photos: string[];
+  photos: Photo[];
 };
