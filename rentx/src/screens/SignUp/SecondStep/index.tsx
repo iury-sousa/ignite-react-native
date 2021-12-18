@@ -7,6 +7,7 @@ import { BackButton } from "../../../components/BackButton";
 import { Bullet } from "../../../components/Bullet";
 import { Button } from "../../../components/Button";
 import { PasswordInput } from "../../../components/PasswordInput";
+import { api } from "../../../services/api";
 import {
   Container,
   Form,
@@ -18,7 +19,7 @@ import {
 } from "./styles";
 
 type Params = {
-  user: { name: string; email: string; driverLisence: string };
+  user: { name: string; email: string; driverLicense: string };
 };
 
 export function SignUpSecondStep() {
@@ -35,7 +36,7 @@ export function SignUpSecondStep() {
     navigation.goBack();
   }
 
-  function handleRegister() {
+  async function handleRegister() {
     if (!password || !passwordConfirm) {
       return Alert.alert("Informe a senha e a confirmação.");
     }
@@ -43,14 +44,26 @@ export function SignUpSecondStep() {
       return Alert.alert("As senhas não são iguais.");
     }
 
-    navigation.navigate(
-      "Confirmation" as never,
-      {
-        title: "Conta criada!",
-        message: "Agora é só fazer login\ne aproveitar.",
-        nextScreenRoute: "SignIn",
-      } as never
-    );
+    await api
+      .post("/users", {
+        name: user.name,
+        email: user.email,
+        driver_license: user.driverLicense,
+        password,
+      })
+      .then(() => {
+        navigation.navigate(
+          "Confirmation" as never,
+          {
+            title: "Conta criada!",
+            message: "Agora é só fazer login\ne aproveitar.",
+            nextScreenRoute: "SignIn",
+          } as never
+        );
+      })
+      .catch(() => {
+        Alert.alert("Atenção", "Não foi possível cadastrar");
+      });
   }
   return (
     <KeyboardAvoidingView behavior="position" enabled>
