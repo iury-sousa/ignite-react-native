@@ -30,7 +30,11 @@ export const CarImages = styled.View`
 `;
 
 export const Content = styled(Animated.ScrollView).attrs({
-  contentContainerStyle: { paddingHorizontal: 24, alignItems: "center" },
+  contentContainerStyle: {
+    paddingHorizontal: 24,
+    alignItems: "center",
+    paddingTop: getStatusBarHeight() + 160,
+  },
   showsVerticalScrollIndicator: false,
 } as ScrollViewProps)``;
 
@@ -106,4 +110,13 @@ export const Footer = styled.View`
 
   justify-content: flex-end;
   align-items: flex-end;
+`;
+
+export const OfflineInfo = styled.Text`
+  margin-top: 8px;
+  color: ${({ theme }) => theme.colors.main};
+  text-align: center;
+
+  font-size: ${RFValue(12)}px;
+  font-family: ${({ theme }) => theme.fonts.primary400};
 `;

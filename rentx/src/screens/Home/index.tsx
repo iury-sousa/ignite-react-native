@@ -1,8 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { synchronize } from "@nozbe/watermelondb/sync";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
@@ -15,7 +16,8 @@ import { useTheme } from "styled-components";
 import Logo from "../../assets/logo.svg";
 import { Car } from "../../components/Car";
 import { LoadAnimation } from "../../components/LoadAnimation";
-import { CarDTO } from "../../dtos/CarDTO";
+import { database } from "../../database";
+import { Car as CarModel } from "../../database/model/Car";
 import { api } from "../../services/api";
 import {
   CartList,
@@ -25,11 +27,6 @@ import {
   MyCarsButton,
   TotalCars,
 } from "./styles";
-import { AntDesign } from "@expo/vector-icons";
-
-import { synchronize } from "@nozbe/watermelondb/sync";
-import { database } from "../../database";
-import { Car as CarModel } from "../../database/model/Car";
 
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
@@ -97,24 +94,9 @@ export function Home() {
 
     async function fetchCars() {
       try {
-        // const response = await api.get<CarDTO[]>("/cars");
-
-        // const cars = response.data.map((car) => {
-        //   const formattedPrice = car.price.toLocaleString("pt-BR", {
-        //     style: "currency",
-        //     currency: "BRL",
-        //   });
-
-        //   return {
-        //     ...car,
-        //     formattedPrice,
-        //   };
-        // });
-
         const carCollection = database.get<CarModel>("cars");
         const cars = await carCollection.query().fetch();
 
-        console.log(cars);
         if (isMounted) {
           setCars(cars);
         }
@@ -135,7 +117,7 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    if (netInfo.isConnected) {
+    if (netInfo.isConnected === true) {
       offlineSynchronize();
     }
   }, [netInfo.isConnected]);
@@ -166,7 +148,6 @@ export function Home() {
         </HeaderContent>
       </Header>
       <LoadAnimation isLoading={loading} />
-      {/* <Button title="Sincronizar" onPress={offlineSynchronize} /> */}
 
       {!loading && (
         <CartList

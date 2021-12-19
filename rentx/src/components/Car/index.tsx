@@ -1,3 +1,4 @@
+import { useNetInfo } from "@react-native-community/netinfo";
 import React from "react";
 import { RectButtonProps } from "react-native-gesture-handler";
 import { Car as CarModel } from "../../database/model/Car";
@@ -22,6 +23,7 @@ type CarProps = RectButtonProps & {
 
 export function Car({ data, ...rest }: CarProps) {
   const { brand, name, period, price, thumbnail, fuel_type } = data;
+  const netInfo = useNetInfo();
 
   const MotorIcon = getAccessoryIcon(fuel_type as AccessoryType);
   return (
@@ -34,10 +36,12 @@ export function Car({ data, ...rest }: CarProps) {
           <Rent>
             <Period>{period}</Period>
             <Price>
-              {price.toLocaleString("pt-BR", {
-                currency: "BRL",
-                style: "currency",
-              })}
+              {netInfo.isConnected === true
+                ? price.toLocaleString("pt-BR", {
+                    currency: "BRL",
+                    style: "currency",
+                  })
+                : "R$ ..."}
             </Price>
           </Rent>
 

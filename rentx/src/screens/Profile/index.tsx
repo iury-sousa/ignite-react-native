@@ -28,17 +28,18 @@ import { useAuth } from "../../hooks/auth";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "../../components/Button";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 type OptionType = "dataEdit" | "passwordEdit";
 
 export function Profile() {
   const { user, signOut, updatedUser } = useAuth();
+  const netInfo = useNetInfo();
 
   const [option, setOption] = useState<OptionType>("dataEdit");
   const [avatar, setAvatar] = useState(user?.avatar);
 
   const [name, setName] = useState(user?.name);
-  // const [email, setEmail] = useState(user?.email);
   const [driverLicense, setDriverLicense] = useState(user?.driver_license);
 
   const theme = useTheme();
@@ -64,8 +65,16 @@ export function Profile() {
     );
   }
 
-  function handleOptionChange(option: OptionType) {
-    setOption(option);
+  function handleOptionChange(selectedOption: OptionType) {
+    if (!netInfo.isConnected && selectedOption === "passwordEdit") {
+      Alert.alert(
+        "Você está offline",
+        "Para alterar a senha, conecte-se a internet"
+      );
+      return;
+    }
+
+    setOption(selectedOption);
   }
 
   async function handleAvatarSelect() {

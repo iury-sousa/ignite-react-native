@@ -21,7 +21,7 @@ export const Container = styled(RectButton)<ButtonProps>`
 
 export const Title = styled.Text<ButtonTitleProps>`
   color: ${({ theme, light }) =>
-    light ? theme.colors.title : theme.colors.shape};
+    light ? theme.colors.title : theme.colors.backgroundSecondary};
 
   font-size: ${RFValue(15)}px;
   font-family: ${({ theme }) => theme.fonts.primary500};
