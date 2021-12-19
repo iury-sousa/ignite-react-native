@@ -19,18 +19,20 @@ import {
   Section,
 } from "./styles";
 import { Input } from "../../components/Input";
-import { Keyboard, KeyboardAvoidingView } from "react-native";
+import { Alert, Keyboard, KeyboardAvoidingView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { PasswordInput } from "../../components/PasswordInput";
 import { useAuth } from "../../hooks/auth";
 
+import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
+import { Button } from "../../components/Button";
 
 type OptionType = "dataEdit" | "passwordEdit";
 
 export function Profile() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, updatedUser } = useAuth();
 
   const [option, setOption] = useState<OptionType>("dataEdit");
   const [avatar, setAvatar] = useState(user?.avatar);
@@ -68,6 +70,36 @@ export function Profile() {
 
     if (result.uri) {
       setAvatar(result.uri);
+    }
+  }
+
+  async function handleProfileUpdate() {
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string().required("Nome obrigatório"),
+        driverLicense: Yup.string().required("CNH é obrigatório"),
+      });
+
+      const data = { name, driverLicense };
+      await schema.validate(data, { abortEarly: false });
+
+      await updatedUser({
+        id: user?.id!,
+        userId: user?.userId!,
+        email: user?.email!,
+        name: data.name!,
+        driver_license: data.driverLicense!,
+        avatar,
+        token: user?.token!,
+      });
+
+      Alert.alert("Perfil atualizado!");
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        Alert.alert("Atenção", error.errors[0]);
+      } else {
+        Alert.alert("Não foi possível atualizar o perfil!");
+      }
     }
   }
 
@@ -136,6 +168,12 @@ export function Profile() {
                 <PasswordInput iconName="lock" placeholder="Repetir senha" />
               </Section>
             )}
+
+            <Button
+              title="Salvar alterações"
+              style={{ marginTop: 8 }}
+              onPress={handleProfileUpdate}
+            />
           </Content>
         </Container>
       </TouchableWithoutFeedback>

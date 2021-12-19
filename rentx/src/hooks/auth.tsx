@@ -15,7 +15,7 @@ type User = {
   email: string;
   name: string;
   driver_license: string;
-  avatar: string;
+  avatar?: string;
   token: string;
 };
 
@@ -28,6 +28,7 @@ type AuthContextData = {
   user?: User | null;
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => Promise<void>;
+  updatedUser: (user: User) => Promise<void>;
 };
 
 type AuthProviderProps = {
@@ -55,12 +56,12 @@ function AuthProvider({ children }: AuthProviderProps) {
       const userCollection = database.get<UserModel>("users");
       await database.write(async () => {
         await userCollection.create((newUser) => {
-          (newUser.userId = user.id),
-            (newUser.name = user.name),
-            (newUser.email = user.email),
-            (newUser.avatar = user.avatar),
-            (newUser.driverLicense = user.driver_license),
-            (newUser.token = token);
+          newUser.userId = user.id;
+          newUser.name = user.name;
+          newUser.email = user.email;
+          newUser.avatar = user.avatar ?? "";
+          newUser.driverLicense = user.driver_license;
+          newUser.token = token;
         });
       });
 
@@ -79,6 +80,24 @@ function AuthProvider({ children }: AuthProviderProps) {
       });
 
       setData(null);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function updatedUser(user: User) {
+    try {
+      const userCollection = database.get<UserModel>("users");
+      await database.write(async () => {
+        const userSelected = await userCollection.find(user.id);
+        await userSelected.update((userData) => {
+          userData.name = user.name;
+          userData.avatar = user.avatar ?? "";
+          userData.driverLicense = user.driver_license;
+        });
+      });
+
+      setData(user);
     } catch (error) {
       throw error;
     }
@@ -104,7 +123,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, user: data }}>
+    <AuthContext.Provider value={{ signIn, signOut, updatedUser, user: data }}>
       {children}
     </AuthContext.Provider>
   );
