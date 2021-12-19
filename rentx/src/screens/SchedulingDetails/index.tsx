@@ -41,6 +41,8 @@ import { format } from "date-fns";
 import { getPlatformDate } from "../../utils/getPlatformDate";
 import { api } from "../../services/api";
 import { Alert } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { Car as CarModel } from "../../database/model/Car";
 
 type Params = {
   car: CarDTO;
@@ -54,13 +56,14 @@ type RentalPeriod = {
 
 export function SchedulingDetails() {
   const [loading, setLoading] = useState(false);
+  const [carUpdated, setCarUpdated] = useState<CarDTO>();
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
     {} as RentalPeriod
   );
 
   const theme = useTheme();
   const navigation = useNavigation();
-
+  const netInfo = useNetInfo();
   const route = useRoute();
   const { car, dates } = route.params as Params;
 
@@ -68,21 +71,15 @@ export function SchedulingDetails() {
 
   async function handleConfirmRental() {
     setLoading(true);
-    const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
-    const unavailable_dates = [
-      ...schedulesByCar.data.unavailable_dates,
-      ...dates,
-    ];
 
-    await api.post("/schedules_byuser", {
-      user_id: 1,
-      car,
-      startDate: dates[0],
-      endDate: dates[dates.length - 1],
-    });
-
-    api
-      .put(`/schedules_bycars/${car.id}`, { id: car.id, unavailable_dates })
+    await api
+      .post("/rentals", {
+        user_id: 1,
+        car_id: car.id,
+        start_date: new Date(dates[0]),
+        end_date: new Date(dates[dates.length - 1]),
+        total: rentTotal,
+      })
       .then(() =>
         navigation.navigate(
           "Confirmation" as never,
@@ -114,13 +111,36 @@ export function SchedulingDetails() {
     });
   }, []);
 
+  useEffect(() => {
+    async function fetchCarUpdated() {
+      const response = await api.get<CarDTO>(`/cars/${car.id}`);
+
+      const data = response.data;
+      data.formattedPrice = data.price.toLocaleString("pt-br", {
+        currency: "BRL",
+        style: "currency",
+      });
+      setCarUpdated(data);
+    }
+
+    if (netInfo.isConnected === true) {
+      fetchCarUpdated();
+    }
+  }, [netInfo.isConnected]);
+
   return (
     <Container>
       <Header>
         <BackButton onPress={handleBack} />
       </Header>
       <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
+        <ImageSlider
+          imagesUrl={
+            !!carUpdated?.photos
+              ? carUpdated.photos
+              : [{ id: car.thumbnail, photo: car.thumbnail }]
+          }
+        />
       </CarImages>
 
       <Content>
@@ -131,19 +151,25 @@ export function SchedulingDetails() {
           </Description>
           <Rent>
             <Period>{car.period}</Period>
-            <Price>{car.formattedPrice}</Price>
+            <Price>
+              {netInfo.isConnected === true
+                ? carUpdated?.formattedPrice
+                : "R$..."}
+            </Price>
           </Rent>
         </Details>
 
-        <Accessories>
-          {car.accessories.map((car) => (
-            <Accessory
-              key={car.type}
-              name={car.name}
-              icon={getAccessoryIcon(car.type)}
-            />
-          ))}
-        </Accessories>
+        {carUpdated?.accessories && (
+          <Accessories>
+            {carUpdated.accessories.map((car) => (
+              <Accessory
+                key={car.type}
+                name={car.name}
+                icon={getAccessoryIcon(car.type)}
+              />
+            ))}
+          </Accessories>
+        )}
         <RentalPeriod>
           <CalendarIcon>
             <Feather
@@ -171,7 +197,7 @@ export function SchedulingDetails() {
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
             <RentalPriceQuota>
-              {`${car.formattedPrice} x${dates.length - 1} diárias`}
+              {/* {`${car.formattedPrice} x${dates.length - 1} diárias`} */}
             </RentalPriceQuota>
             <RentalPriceTotal>
               {rentTotal.toLocaleString("pt-BR", {
@@ -188,6 +214,7 @@ export function SchedulingDetails() {
           title="Alugar agora"
           color={theme.colors.success}
           loading={loading}
+          enabled={!!netInfo.isConnected}
           onPress={handleConfirmRental}
         />
       </Footer>
