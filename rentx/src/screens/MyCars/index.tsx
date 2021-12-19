@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, StatusBar } from "react-native";
 import { useTheme } from "styled-components";
@@ -24,22 +24,22 @@ import {
   CarFooterPeriod,
   CarFooterDate,
 } from "./styles";
-import { format } from "date-fns";
-import { getPlatformDate } from "../../utils/getPlatformDate";
+import { format, parseISO } from "date-fns";
 import { LoadAnimation } from "../../components/LoadAnimation";
+import { Car as CarModel } from "../../database/model/Car";
 
-type CarProps = {
+type DataProps = {
   id: string;
-  user_id: string;
-  car: CarDTO;
-  startDate: string;
-  endDate: string;
+  car: CarModel;
+  start_date: string;
+  end_date: string;
 };
 
 export function MyCars() {
-  const [cars, setCars] = useState<CarProps[]>([]);
+  const [cars, setCars] = useState<DataProps[]>([]);
   const [loading, setloading] = useState(true);
 
+  const screenIsFocus = useIsFocused();
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -50,10 +50,17 @@ export function MyCars() {
   useEffect(() => {
     async function fetchCars() {
       try {
-        const response = await api.get<CarProps[]>("/schedules_byuser", {
-          params: { user_id: 1 },
+        const response = await api.get<DataProps[]>("/rentals");
+        const newCars = response.data.map((car) => {
+          return {
+            id: car.id,
+            car: car.car,
+            start_date: format(parseISO(car.start_date), "dd/MM/yyyy"),
+            end_date: format(parseISO(car.end_date), "dd/MM/yyyy"),
+          };
         });
-        setCars(response.data);
+
+        setCars(newCars);
       } catch (error) {
         console.log(error);
         Alert.alert("Falha ao consultar carros");
@@ -62,8 +69,8 @@ export function MyCars() {
       }
     }
 
-    fetchCars();
-  }, []);
+    if (screenIsFocus) fetchCars();
+  }, [screenIsFocus]);
   return (
     <Container>
       <StatusBar
@@ -100,24 +107,14 @@ export function MyCars() {
                 <CarFooter>
                   <CarFooterTitle>Período</CarFooterTitle>
                   <CarFooterPeriod>
-                    <CarFooterDate>
-                      {format(
-                        getPlatformDate(new Date(item.startDate)),
-                        "dd/MM/yyyy"
-                      )}
-                    </CarFooterDate>
+                    <CarFooterDate>{item.start_date}</CarFooterDate>
                     <AntDesign
                       name="arrowright"
                       size={20}
                       color={theme.colors.title}
                       style={{ marginHorizontal: 10 }}
                     />
-                    <CarFooterDate>
-                      {format(
-                        getPlatformDate(new Date(item.endDate)),
-                        "dd/MM/yyyy"
-                      )}
-                    </CarFooterDate>
+                    <CarFooterDate>{item.end_date}</CarFooterDate>
                   </CarFooterPeriod>
                 </CarFooter>
               </CarWrapper>
