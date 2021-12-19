@@ -38,7 +38,7 @@ export function Profile() {
   const [avatar, setAvatar] = useState(user?.avatar);
 
   const [name, setName] = useState(user?.name);
-  const [email, setEmail] = useState(user?.email);
+  // const [email, setEmail] = useState(user?.email);
   const [driverLicense, setDriverLicense] = useState(user?.driver_license);
 
   const theme = useTheme();
