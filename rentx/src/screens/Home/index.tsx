@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { Alert, Button, StatusBar } from "react-native";
 import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
@@ -24,69 +25,96 @@ import {
   MyCarsButton,
   TotalCars,
 } from "./styles";
+import { AntDesign } from "@expo/vector-icons";
+
+import { synchronize } from "@nozbe/watermelondb/sync";
+import { database } from "../../database";
+import { Car as CarModel } from "../../database/model/Car";
 
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
 export function Home() {
   const navigation = useNavigation();
-  const [cars, setCars] = useState<CarDTO[]>([]);
+  const [cars, setCars] = useState<CarModel[]>([]);
   const [loading, setLoading] = useState(true);
-  // const theme = useTheme();
+  const netInfo = useNetInfo();
+  const theme = useTheme();
 
-  // const positionY = useSharedValue(0);
-  // const positionX = useSharedValue(0);
+  const positionY = useSharedValue(0);
+  const positionX = useSharedValue(0);
 
-  // const myCarsButtonStyle = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [
-  //       { translateX: positionX.value },
-  //       { translateY: positionY.value },
-  //     ],
-  //   };
-  // });
+  const myCarsButtonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: positionX.value },
+        { translateY: positionY.value },
+      ],
+    };
+  });
 
-  // const onGestureEvent = useAnimatedGestureHandler({
-  //   onStart(_, context: any) {
-  //     context.positionX = positionX.value;
-  //     context.positionY = positionY.value;
-  //   },
-  //   onActive(event, context: any) {
-  //     positionX.value = context.positionX + event.translationX;
-  //     positionY.value = context.positionY + event.translationY;
-  //   },
-  //   onEnd() {
-  //     positionX.value = withSpring(0);
-  //     positionY.value = withSpring(0);
-  //   },
-  // });
+  const onGestureEvent = useAnimatedGestureHandler({
+    onStart(_, context: any) {
+      context.positionX = positionX.value;
+      context.positionY = positionY.value;
+    },
+    onActive(event, context: any) {
+      positionX.value = context.positionX + event.translationX;
+      positionY.value = context.positionY + event.translationY;
+    },
+    onEnd() {
+      positionX.value = withSpring(0);
+      positionY.value = withSpring(0);
+    },
+  });
 
-  function handleCarDetails(car: CarDTO) {
+  function handleCarDetails(car: CarModel) {
     navigation.navigate("CarDetails" as never, { car } as never);
   }
 
-  // function handleOpneMyCars() {
-  //   navigation.navigate("MyCars" as never);
-  // }
+  async function offlineSynchronize() {
+    await synchronize({
+      database,
+      pullChanges: async ({ lastPulledAt }) => {
+        const response = await api.get(
+          `/cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`
+        );
+
+        const { changes, latestVersion } = response.data;
+        return { changes, timestamp: latestVersion };
+      },
+      pushChanges: async ({ changes }) => {
+        const user = changes.users;
+
+        await api
+          .post("/users/sync", user)
+          .catch((e) => console.log("ERRO: ", e));
+      },
+    });
+  }
 
   useEffect(() => {
     let isMounted = true;
 
     async function fetchCars() {
       try {
-        const response = await api.get<CarDTO[]>("/cars");
+        // const response = await api.get<CarDTO[]>("/cars");
 
-        const cars = response.data.map((car) => {
-          const formattedPrice = car.price.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          });
+        // const cars = response.data.map((car) => {
+        //   const formattedPrice = car.price.toLocaleString("pt-BR", {
+        //     style: "currency",
+        //     currency: "BRL",
+        //   });
 
-          return {
-            ...car,
-            formattedPrice,
-          };
-        });
+        //   return {
+        //     ...car,
+        //     formattedPrice,
+        //   };
+        // });
 
+        const carCollection = database.get<CarModel>("cars");
+        const cars = await carCollection.query().fetch();
+
+        console.log(cars);
         if (isMounted) {
           setCars(cars);
         }
@@ -105,6 +133,12 @@ export function Home() {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (netInfo.isConnected) {
+      offlineSynchronize();
+    }
+  }, [netInfo.isConnected]);
 
   // useEffect(() => {
   //   // Desabilita a ação do botão voltar
@@ -132,6 +166,7 @@ export function Home() {
         </HeaderContent>
       </Header>
       <LoadAnimation isLoading={loading} />
+      {/* <Button title="Sincronizar" onPress={offlineSynchronize} /> */}
 
       {!loading && (
         <CartList
@@ -142,18 +177,18 @@ export function Home() {
           )}
         />
       )}
-      {/* <PanGestureHandler onGestureEvent={onGestureEvent}>
+      <PanGestureHandler onGestureEvent={onGestureEvent}>
         <MyCarsButton style={myCarsButtonStyle}>
           <ButtonAnimated>
-            <Ionicons
-              name="ios-car-sport"
+            <AntDesign
+              name="retweet"
               size={32}
-              color={theme.colors.shape}
-              onPress={handleOpneMyCars}
+              color={theme.colors.backgroundSecondary}
+              onPress={offlineSynchronize}
             />
           </ButtonAnimated>
         </MyCarsButton>
-      </PanGestureHandler> */}
+      </PanGestureHandler>
     </Container>
   );
 }

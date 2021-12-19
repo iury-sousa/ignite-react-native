@@ -29,6 +29,7 @@ type AuthContextData = {
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   updatedUser: (user: User) => Promise<void>;
+  loading: boolean;
 };
 
 type AuthProviderProps = {
@@ -38,6 +39,7 @@ type AuthProviderProps = {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<User | null>();
 
   async function signIn(credentials: SignInCredentials) {
@@ -116,6 +118,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         } as never;
 
         setData(userData);
+        setLoading(false);
       }
     }
 
@@ -123,7 +126,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, updatedUser, user: data }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, updatedUser, user: data, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

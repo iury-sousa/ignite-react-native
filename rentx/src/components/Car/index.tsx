@@ -1,6 +1,7 @@
 import React from "react";
 import { RectButtonProps } from "react-native-gesture-handler";
-import { CarDTO } from "../../dtos/CarDTO";
+import { Car as CarModel } from "../../database/model/Car";
+import { AccessoryType, CarDTO } from "../../dtos/CarDTO";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import {
   About,
@@ -16,13 +17,13 @@ import {
 } from "./styles";
 
 type CarProps = RectButtonProps & {
-  data: CarDTO;
+  data: CarModel;
 };
 
 export function Car({ data, ...rest }: CarProps) {
-  const { brand, name, period, formattedPrice, thumbnail, fuel_type } = data;
+  const { brand, name, period, price, thumbnail, fuel_type } = data;
 
-  const MotorIcon = getAccessoryIcon(fuel_type);
+  const MotorIcon = getAccessoryIcon(fuel_type as AccessoryType);
   return (
     <Container {...rest}>
       <Details>
@@ -32,7 +33,12 @@ export function Car({ data, ...rest }: CarProps) {
         <About>
           <Rent>
             <Period>{period}</Period>
-            <Price>{formattedPrice}</Price>
+            <Price>
+              {price.toLocaleString("pt-BR", {
+                currency: "BRL",
+                style: "currency",
+              })}
+            </Price>
           </Rent>
 
           <Type>

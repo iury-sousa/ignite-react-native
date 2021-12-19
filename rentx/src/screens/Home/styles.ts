@@ -1,8 +1,7 @@
 import styled from "styled-components/native";
 import { FlatList, FlatListProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { CarDTO } from "../../dtos/CarDTO";
-import { RectButton } from "react-native-gesture-handler";
+import { Car as CarModel } from "../../database/model/Car";
 import Animated from "react-native-reanimated";
 
 export const Container = styled.View`
@@ -34,7 +33,7 @@ export const TotalCars = styled.Text`
 `;
 
 export const CartList = styled(
-  FlatList as new (props: FlatListProps<CarDTO>) => FlatList<CarDTO>
+  FlatList as new (props: FlatListProps<CarModel>) => FlatList<CarModel>
 ).attrs({
   contentContainerStyle: { padding: 24 },
   showsVerticalScrollIndicator: false,
