@@ -49,7 +49,19 @@ export function Profile() {
   }
 
   function handleSignOut() {
-    signOut();
+    Alert.alert(
+      "Tem certeza?",
+      "Lembre-se que se você sair, irá precisar de internet para conectar-se novamente.",
+      [
+        {
+          text: "Cancelar",
+        },
+        {
+          text: "Sair",
+          onPress: () => signOut(),
+        },
+      ]
+    );
   }
 
   function handleOptionChange(option: OptionType) {
