@@ -6,7 +6,8 @@
     "web": "expo start --web",
     "start": "react-native start",
     "type-check": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "test:debug": "jest -o --watch --coverage=false"
   },
   "jest": {
     "preset": "jest-expo",
@@ -33,6 +34,7 @@
     "expo-status-bar": "~1.1.0",
     "expo-updates": "~0.10.13",
     "intl": "^1.2.5",
+    "jest": "^27.4.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^7.21.0",
@@ -55,6 +57,7 @@
     "@babel/core": "^7.12.9",
     "@testing-library/jest-native": "^4.0.4",
     "@testing-library/react-native": "^9.0.0",
+    "@types/jest": "^27.0.3",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "@types/styled-components-react-native": "^5.1.3",
