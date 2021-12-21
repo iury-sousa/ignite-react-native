@@ -5,8 +5,18 @@ export function Profile() {
   return (
     <View>
       <Text>Perfil</Text>
-      <TextInput placeholder="Nome" autoCorrect={false} />
-      <TextInput placeholder="Sobrenome" autoCorrect={false} />
+      <TextInput
+        testID="input-name"
+        placeholder="Nome"
+        autoCorrect={false}
+        value="Iury"
+      />
+      <TextInput
+        testID="input-surname"
+        placeholder="Sobrenome"
+        autoCorrect={false}
+        value="Sousa"
+      />
 
       <Button title="Salvar" onPress={() => null} />
     </View>

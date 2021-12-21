@@ -9,12 +9,6 @@
     "test": "jest",
     "test:debug": "jest -o --watch --coverage=false"
   },
-  "jest": {
-    "preset": "jest-expo",
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect"
-    ]
-  },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.0",
     "@hookform/resolvers": "^2.8.4",
