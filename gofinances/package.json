@@ -7,7 +7,8 @@
     "start": "react-native start",
     "type-check": "tsc",
     "test": "jest",
-    "test:debug": "jest -o --watch --coverage=false"
+    "test:debug": "jest -o --watch --coverage=false",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.0",

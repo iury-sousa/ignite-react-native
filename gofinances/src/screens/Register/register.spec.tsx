@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { Register } from ".";
 import { ThemeProvider } from "styled-components/native";
 import theme from "../../global/styles/theme";
@@ -13,7 +13,7 @@ const Providers: React.FC = ({ children }) => (
 jest.mock("@react-navigation/native");
 
 describe("Register Screen", () => {
-  it("should be open category modal when user click on button", () => {
+  it("should be open category modal when user click on button", async () => {
     const useNavigationMocked = mocked(useNavigation);
     useNavigationMocked.mockReturnValueOnce({ navigate: jest.fn() });
 
@@ -25,6 +25,8 @@ describe("Register Screen", () => {
 
     fireEvent.press(buttonCategory);
 
-    expect(categoryModal.props.visible).toBeTruthy();
+    await waitFor(() => {
+      expect(categoryModal.props.visible).toBeTruthy();
+    });
   });
 });
