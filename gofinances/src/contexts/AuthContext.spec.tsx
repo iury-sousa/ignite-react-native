@@ -15,14 +15,15 @@ fetchMock.enableMocks();
 
 describe("Auth Hook", () => {
   it("should be able to sign in with Google account existing", async () => {
+    AsyncStorage.removeAll();
     //Primeiro, nós precisamos do Token. Então, vamos Mockar a função de startAsync.
-    const googleMocked = mocked(startAsync as any);
+    const googleMocked = mocked(startAsync);
     googleMocked.mockReturnValueOnce({
       type: "success",
       params: {
         access_token: "any_token",
       },
-    });
+    } as any);
 
     //Agora que temos o Token, vamos mockar a requisição http dos dados de profile do usuário.
     fetchMock.mockResponseOnce(
@@ -44,5 +45,22 @@ describe("Auth Hook", () => {
     // console.log(await AsyncStorage.getItem("@gofinances:user", null));
 
     expect(result.current.user?.email).toBe("iurysousa13@outlook.com");
+  });
+
+  it("user should not connect if cancel authentication with Google", async () => {
+    AsyncStorage.removeAll();
+    const googleMocked = mocked(startAsync);
+
+    googleMocked.mockReturnValueOnce({
+      type: "cancel",
+    } as any);
+
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: AuthProvider,
+    });
+
+    await act(() => result.current.signInWithGoogle());
+
+    expect(result.current.user).toBeNull();
   });
 });

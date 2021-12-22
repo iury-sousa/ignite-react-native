@@ -33,4 +33,9 @@ export default {
       resolve(items.keys());
     });
   }),
+  removeAll: jest.fn(() => {
+    return new Promise((resolve) => {
+      resolve((items = []));
+    });
+  }),
 };

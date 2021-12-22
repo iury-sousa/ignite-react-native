@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@jest/create-cache-key-function": "^27.4.2",
     "@testing-library/jest-native": "^4.0.4",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/react-native": "^9.0.0",
