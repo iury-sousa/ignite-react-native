@@ -10,6 +10,9 @@
     "test:debug": "jest -o --watch --coverage=false",
     "test:coverage": "jest --coverage"
   },
+  "resolutions": {
+    "@jest/create-cache-key-function": "^27.0.3"
+  },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.0",
     "@hookform/resolvers": "^2.8.4",
